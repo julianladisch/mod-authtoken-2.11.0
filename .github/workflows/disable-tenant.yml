@@ -43,7 +43,7 @@ jobs:
           curl -sS -D - -H "Content-type: application/json" -d @ModuleDescriptor.json http://localhost:9130/_/proxy/modules
       - name: Deploy module
         run: |
-          curl -sS -D - -H "Content-type: application/json" -d '{"srvcId": "mod-authtoken-2.11.0", "url": "http://localhost:8081"}' http://localhost:9130/_/discovery/modules
+          curl -sS -D - -H "Content-type: application/json" -d '{"srvcId": "mod-authtoken-2.11.0", "instId":"mod-authtoken-2.11.0", "url": "http://localhost:8081"}' http://localhost:9130/_/discovery/modules
       - name: Enable module for tenant
         run: |
           curl -sS -D - -H "Content-type: application/json" -d '{"id": "mod-authtoken-2.11.0"}' http://localhost:9130/_/proxy/tenants/diku/modules
