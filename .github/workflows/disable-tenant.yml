@@ -32,6 +32,9 @@ jobs:
         run: curl --retry 30 --retry-delay 1 --retry-connrefused -sS http://localhost:9130/_/proxy/health
       - name: mod-authtoken health
         run: curl --retry 30 --retry-delay 1 --retry-connrefused -sS http://localhost:8081/admin/health
+      - name: List nodes
+        run: |
+          curl -sS -D - -H "Content-type: application/json" http://localhost:9130/_/discovery/nodes
       - name: Enable tenant
         run: |
           curl -sS -D - -H "Content-type: application/json" -d '{"id": "diku"}' http://localhost:9130/_/proxy/tenants
