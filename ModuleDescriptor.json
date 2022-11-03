@@ -69,8 +69,5 @@
       "phase": "auth",
       "type": "headers"
     }
-  ],
-  "launchDescriptor": {
-    "exec": "java -Dport=%p -jar mod-authtoken-fat.jar"
-  }
+  ]
 }
