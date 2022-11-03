@@ -24,8 +24,18 @@ jobs:
         run: curl --retry 30 --retry-delay 1 --retry-connrefused -sS http://localhost:9130/_/proxy/health
       - name: mod-authtoken health
         run: curl --retry 30 --retry-delay 1 --retry-connrefused -sS http://localhost:8081/admin/health
-      - run: |
-          curl -sS -D - -H "Content-type: application/json" -d '{"id": "diku"}' http://localhost:9130/_/proxy/tenants
-      - name: Disable module
+      - name: Enable tenant
         run: |
-          curl -s -S -D - -XDELETE http://localhost:9130/_/proxy/tenants/testlib/modules
+          curl -sS -D - -H "Content-type: application/json" -d '{"id": "diku"}' http://localhost:9130/_/proxy/tenants
+      - name: Declare module
+        run: |
+          curl -sS -D - -H "Content-type: application/json" -d @ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+      - name: Deploy module
+        run: |
+          curl -sS -D - -H "Content-type: application/json" -d '{"srvcId": "mod-authtoken-2.11.0", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules
+      - name: Enable module for tenant
+        run: |
+          curl -sS -D - -H "Content-type: application/json" -d @Enable.json http://localhost:9130/_/proxy/tenants/diku/modules
+      - name: Disable module for tenant
+        run: |
+          curl -s -S -D - -XDELETE http://localhost:9130/_/proxy/tenants/diku/modules
