@@ -69,5 +69,8 @@
       "phase": "auth",
       "type": "headers"
     }
-  ]
+  ],
+  "launchDescriptor": {
+    "url": "http://localhost:8081"
+  }
 }
