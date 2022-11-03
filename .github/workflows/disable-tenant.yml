@@ -1,0 +1,31 @@
+name: disable tenant
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start Okapi
+        run: |
+          docker create --name okapi folioorg/okapi:4.14.4
+          docker cp okapi:/usr/verticles/okapi-core-fat.jar okapi-core-fat.jar
+          docker rm -f okapi
+          OKAPI=http://`docker network inspect --format='{{range .IPAM.Config}}{{.Gateway}}{{end}}' bridge`:9130
+          java -Dokapiurl=$OKAPI -jar okapi-core-fat.jar dev &
+      - name: Start mod-authtoken
+        run: |
+          docker create --name mod-authtoken folioorg/mod-authtoken:2.11.0
+          docker cp mod-authtoken:/usr/verticles/mod-authtoken-fat.jar mod-authtoken-fat.jar
+          docker rm -f mod-authtoken
+          java -jar mod-authtoken-fat.jar &
+      - name: Okapi health
+        run: curl --retry 30 --retry-delay 1 --retry-connrefused -sS http://localhost:9130/_/proxy/health
+      - name: mod-authtoken health
+        run: curl --retry 30 --retry-delay 1 --retry-connrefused -sS http://localhost:8081/admin/health
+      - run: |
+          curl -sS -D - -H "Content-type: application/json" -d '{"id": "diku"}' http://localhost:9130/_/proxy/tenants
+      - name: Disable module
+        run: |
+          curl -s -S -D - -XDELETE http://localhost:9130/_/proxy/tenants/testlib/modules
