@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Start PostgreSQL
-        run: docker run --name postgres -e POSTGRES_PASSWORD=password -e POSTGRES_USER=user -p 5432:5432 -d postgres:alpine
+        run: docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres:alpine
       - name: Start Okapi
         run: |
           docker create --name okapi folioorg/okapi:4.14.4
@@ -22,6 +22,11 @@ jobs:
           docker create --name mod-authtoken folioorg/mod-authtoken:2.11.0
           docker cp mod-authtoken:/usr/verticles/mod-authtoken-fat.jar mod-authtoken-fat.jar
           docker rm -f mod-authtoken
+          export DB_HOST=localhost
+          export DB_PORT=5432
+          export DB_DATABASE=postgres
+          export DB_USERNAME=postgres
+          export DB_PASSWORD=postgres
           java -jar mod-authtoken-fat.jar &
       - name: Okapi health
         run: curl --retry 30 --retry-delay 1 --retry-connrefused -sS http://localhost:9130/_/proxy/health
