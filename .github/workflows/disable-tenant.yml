@@ -36,7 +36,7 @@ jobs:
           curl -sS -D - -H "Content-type: application/json" -d '{"srvcId": "mod-authtoken-2.11.0", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules
       - name: Enable module for tenant
         run: |
-          curl -sS -D - -H "Content-type: application/json" -d @Enable.json http://localhost:9130/_/proxy/tenants/diku/modules
+          curl -sS -D - -H "Content-type: application/json" -d '{"id": "mod-authtoken-2.11.0"}' http://localhost:9130/_/proxy/tenants/diku/modules
       - name: Disable module for tenant
         run: |
           curl -s -S -D - -XDELETE http://localhost:9130/_/proxy/tenants/diku/modules
