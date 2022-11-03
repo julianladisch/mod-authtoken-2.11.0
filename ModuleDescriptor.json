@@ -71,6 +71,6 @@
     }
   ],
   "launchDescriptor": {
-    "exec": "java -Dport=%p -jar ${basedir}/mod-authtoken-fat.jar"
+    "exec": "java -Dport=%p -jar mod-authtoken-fat.jar"
   }
 }
