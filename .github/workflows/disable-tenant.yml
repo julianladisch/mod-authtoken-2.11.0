@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Start PostgreSQL
+        run: docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres:alpine
       - name: Start Okapi
         run: |
           docker create --name okapi folioorg/okapi:4.14.4
@@ -39,4 +41,4 @@ jobs:
           curl -sS -D - -H "Content-type: application/json" -d '{"id": "mod-authtoken-2.11.0"}' http://localhost:9130/_/proxy/tenants/diku/modules
       - name: Disable module for tenant
         run: |
-          curl -s -S -D - -XDELETE http://localhost:9130/_/proxy/tenants/diku/modules
+          curl -s -S -D - -XDELETE http://localhost:9130/_/proxy/tenants/diku/modules/mod-authtoken-2.11.0
